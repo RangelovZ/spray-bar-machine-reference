@@ -81,10 +81,10 @@ The goal is to share engineering practices and software architecture without exp
 
 ### Current
 
-* ✔ Machine Specification
-* ✔ Software Architecture
-* ✔ Engineering Principles
-* ✔ Coding Standard
+*  Machine Specification
+*  Software Architecture
+*  Engineering Principles
+*  Coding Standard
 
 ### Planned
 
