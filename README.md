@@ -76,21 +76,3 @@ This repository does **not** include:
 * Commissioning parameters
 
 The goal is to share engineering practices and software architecture without exposing proprietary implementation details.
-
-## Roadmap
-
-### Current
-
-*  Machine Specification
-*  Software Architecture
-*  Engineering Principles
-*  Coding Standard
-
-### Planned
-
-* Application Data Model
-* State Machine Design
-* Reference Structured Text Skeletons
-* Architecture Diagrams
-* Example Design Patterns
-* Architecture Decision Records (ADRs)
