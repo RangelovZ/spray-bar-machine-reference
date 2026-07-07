@@ -2,21 +2,24 @@
 
 This folder contains Architecture Decision Records (ADRs) for the project.
 
-An ADR documents an important architectural decision, including the context, selected decision, rationale, and consequences.
+An ADR documents a significant architectural decision, including its context, the selected solution, the rationale behind the decision, and its consequences.
 
 ADRs are used only for decisions that:
 
 * have a significant impact on the application architecture,
 * involve trade-offs between multiple valid options,
 * are difficult or expensive to change later,
-* help future readers understand why the system is designed in a certain way.
+* help future readers understand why the system is designed in a particular way.
 
-ADRs are not used for minor implementation details, parameter values, or temporary development notes.
+ADRs are **not** used for implementation details, parameter values, or temporary development notes.
 
-## ADR Format
+---
+
+## ADR Template
 
 Each ADR should follow the structure below.
 
+```text
 # ADR-XXX: Decision Title
 
 ## Purpose
@@ -40,18 +43,16 @@ Explain why this solution was chosen over the alternatives.
 Describe the expected impact, including benefits, trade-offs, and limitations.
 ```
 
+---
+
 ## Naming Convention
 
-ADR files should use the following format:
-
-```text
-ADR-001-decision-title.md
-ADR-002-decision-title.md
-ADR-003-decision-title.md
-```
-
-Example:
+ADR files shall use the following naming convention:
 
 ```text
 ADR-001-application-responsibilities.md
+ADR-002-command-status-communication.md
+ADR-003-one-way-data-flow.md
 ```
+
+Each ADR shall document a single architectural decision.
