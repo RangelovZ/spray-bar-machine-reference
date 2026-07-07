@@ -15,30 +15,29 @@ ADRs are not used for minor implementation details, parameter values, or tempora
 
 ## ADR Format
 
-Each ADR should follow this structure:
+Each ADR should follow the structure below.
 
-```text
 # ADR-XXX: Decision Title
 
-## Status
+## Purpose
 
-Proposed | Accepted | Superseded
+Briefly describe why this ADR exists.
 
 ## Context
 
-Describe the problem, background, and constraints.
+Describe the problem, background, constraints, and available options.
 
 ## Decision
 
-Describe the selected decision.
+Describe the selected architectural decision.
 
 ## Rationale
 
-Explain why this decision was selected.
+Explain why this solution was chosen over the alternatives.
 
 ## Consequences
 
-Describe the benefits, trade-offs, and limitations of this decision.
+Describe the expected impact, including benefits, trade-offs, and limitations.
 ```
 
 ## Naming Convention
