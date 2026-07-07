@@ -243,6 +243,40 @@ Fault codes should be represented using an enumeration where practical.
 
 ---
 
+## Application Entry Point
+
+The application shall have a single entry point.
+
+Where supported by the target PLC platform, the main program should be named `Application`.
+
+If the platform requires a predefined program name (for example `PLC_PRG`), the main program shall contain only the application entry point.
+
+Preferred structure:
+
+```text
+PROGRAM Application
+
+↓
+
+FB_Application
+```
+
+Fallback structure:
+
+```text
+PROGRAM PLC_PRG
+
+↓
+
+FB_Application
+```
+
+The main program shall not contain application logic.
+
+Its only responsibility is to instantiate and execute `FB_Application`.
+
+---
+
 ## Comments
 
 Comments should explain why something is done, not simply repeat what the code already says.
