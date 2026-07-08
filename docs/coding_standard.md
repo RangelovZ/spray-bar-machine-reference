@@ -189,6 +189,35 @@ STOPPED
 RUNNING
 FAULT
 ```
+### Enumeration Values
+
+Enumeration values should use explicit numeric assignments when they represent application states, commands, operating modes, alarms, faults, or other values that may be exchanged with external systems or persisted over time.
+
+Command, fault, and warning enumerations should reserve value `0` for `NONE` whenever applicable.
+
+State enumerations should use the first valid operational state as value `0` rather than introducing an artificial `NONE` state.
+
+Examples:
+
+```text
+E_AxisCommand
+    NONE            := 0
+    HOME            := 1
+    MOVE_ABSOLUTE   := 2
+    START_CYCLING   := 3
+    STOP            := 4
+```
+
+```text
+E_AxisState
+    NOT_HOMED       := 0
+    HOMING          := 1
+    IDLE            := 2
+    POSITIONING     := 3
+    CYCLING         := 4
+    STOPPING        := 5
+    FAULT           := 6
+```
 
 ---
 
