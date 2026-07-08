@@ -4,7 +4,7 @@
 
 This document defines the coding conventions used in the project.
 
-The goal is to keep the code readable, consistent, and maintainable across different application components.
+The goal is to keep the code readable, consistent, deterministic, and maintainable across different application components.
 
 ---
 
@@ -17,6 +17,87 @@ The goal is to keep the code readable, consistent, and maintainable across diffe
 * Keep each component focused on one responsibility.
 * Use meaningful names that describe intent.
 * Keep interfaces small and well-defined.
+
+---
+
+## Application Entry Point
+
+The application shall have a single entry point.
+
+Where supported by the target PLC platform, the main program should be named `Application`.
+
+If the platform requires a predefined program name, such as `PLC_PRG`, the main program shall contain only the application entry point.
+
+Preferred structure:
+
+```text
+PROGRAM Application
+        ↓
+FB_Application
+```
+
+Fallback structure:
+
+```text
+PROGRAM PLC_PRG
+        ↓
+FB_Application
+```
+
+The main program shall not contain application logic.
+
+Its only responsibility is to instantiate and execute `FB_Application`.
+
+---
+
+## Component Interface Direction
+
+Application components shall use deterministic data exchange through explicit inputs and outputs.
+
+Shared application data shall follow ownership rules:
+
+| Data        | Owner            | Interface Direction       |
+| ----------- | ---------------- | ------------------------- |
+| Commands    | Manager          | `VAR_INPUT` for consumers |
+| Parameters  | Application      | `VAR_INPUT` for consumers |
+| Status      | Owning component | `VAR_OUTPUT` from owner   |
+| Diagnostics | Owning component | `VAR_OUTPUT` from owner   |
+
+Application components shall only modify data they own.
+
+Data owned by other components shall be treated as read-only.
+
+`VAR_IN_OUT` should be avoided for application components unless shared ownership is explicitly required and documented.
+
+Typical module interface:
+
+```text
+VAR_INPUT
+    stCommands
+    stParameters
+END_VAR
+
+VAR_OUTPUT
+    stStatus
+    stDiagnostics
+END_VAR
+```
+
+Typical manager interface:
+
+```text
+VAR_INPUT
+    stCommands
+    stParameters
+    stModuleStatus
+    stDiagnostics
+END_VAR
+
+VAR_OUTPUT
+    stStatus
+    stModuleCommands
+END_VAR
+```
 
 ---
 
@@ -35,6 +116,7 @@ Prefixes are used where they improve readability, online monitoring, and consist
 Function block types use the `FB_` prefix.
 
 ```text
+FB_Application
 FB_AxisModule
 FB_PumpModule
 FB_SequenceManager
@@ -43,6 +125,7 @@ FB_SequenceManager
 Function block instances use the `fb` prefix.
 
 ```text
+fbApplication
 fbAxis
 fbPump
 fbSequenceManager
@@ -55,17 +138,23 @@ fbSequenceManager
 Structure types use the `ST_` prefix.
 
 ```text
-ST_MachineStatus
-ST_MachineParameters
-ST_OperatorCommands
+ST_Commands
+ST_Parameters
+ST_Status
+ST_Diagnostics
+ST_AxisCommands
+ST_AxisStatus
 ```
 
 Structure instances use the `st` prefix.
 
 ```text
-stMachineStatus
-stMachineParameters
-stOperatorCommands
+stCommands
+stParameters
+stStatus
+stDiagnostics
+stAxisCommands
+stAxisStatus
 ```
 
 ---
@@ -78,6 +167,7 @@ Enumeration types use the `E_` prefix.
 E_OperatingMode
 E_MachineState
 E_AxisCommand
+E_AxisState
 ```
 
 Enumeration variables use the `e` prefix.
@@ -86,6 +176,7 @@ Enumeration variables use the `e` prefix.
 eOperatingMode
 eMachineState
 eAxisCommand
+eAxisState
 ```
 
 Enumeration values use uppercase names.
@@ -146,9 +237,10 @@ Role-based names may be used when they better describe intent than a data type a
 Common role names include:
 
 ```text
-Command
-Status
+Commands
 Parameters
+Status
+Diagnostics
 Request
 Actual
 Target
@@ -158,7 +250,7 @@ Fault
 Examples:
 
 ```text
-stAxisCommand
+stAxisCommands
 stAxisStatus
 stMachineParameters
 
@@ -182,8 +274,7 @@ The main component categories are:
 Interfaces
 Managers
 Modules
-Parameters
-Status
+Data
 ```
 
 Each component shall have a clearly defined owner and responsibility.
@@ -196,21 +287,20 @@ A function block should represent one clear responsibility.
 
 A function block shall not directly modify the internal state of another function block.
 
-Where possible, function blocks should communicate through explicit command and status data.
+Function blocks should exchange data through explicit input and output structures.
 
-Typical function block interface:
+Typical function block data groups:
 
 ```text
-Inputs
-Outputs
+Commands
 Parameters
 Status
 Diagnostics
 ```
 
-Not every function block needs every interface element.
+Not every function block needs every data group.
 
-Unused signals shall not be added only for symmetry.
+Unused structures or signals shall not be added only for symmetry.
 
 ---
 
@@ -227,6 +317,10 @@ eAxisCommand  : E_AxisCommand;
 
 Avoid using plain integers or multiple unrelated booleans to represent complex states.
 
+Commands represent requests.
+
+States represent current component condition.
+
 ---
 
 ## Error Handling
@@ -240,40 +334,6 @@ Faults should not reset automatically unless explicitly defined.
 Fault reset shall be intentional and traceable.
 
 Fault codes should be represented using an enumeration where practical.
-
----
-
-## Application Entry Point
-
-The application shall have a single entry point.
-
-Where supported by the target PLC platform, the main program should be named `Application`.
-
-If the platform requires a predefined program name (for example `PLC_PRG`), the main program shall contain only the application entry point.
-
-Preferred structure:
-
-```text
-PROGRAM Application
-
-↓
-
-FB_Application
-```
-
-Fallback structure:
-
-```text
-PROGRAM PLC_PRG
-
-↓
-
-FB_Application
-```
-
-The main program shall not contain application logic.
-
-Its only responsibility is to instantiate and execute `FB_Application`.
 
 ---
 
