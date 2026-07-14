@@ -395,3 +395,19 @@ Keep conditional logic readable.
 Avoid deeply nested logic where a small state machine or helper function would be clearer.
 
 Use blank lines to separate logical sections of code.
+
+---
+
+### PLCopen Motion Function Blocks
+
+PLCopen motion function blocks shall be called directly inside the state that owns them.
+
+Avoid unnecessary wrapper methods around PLCopen function blocks unless they provide significant code reuse.
+
+Prefer explicit `Execute := TRUE/FALSE` logic, making the execution flow easy to understand during online debugging and commissioning.
+
+For this project, readability and maintainability take precedence over excessive abstraction.
+
+Each PLCopen function block instance shall belong to a single state or sub-state.
+
+The ownership of a PLCopen function block must be obvious from the state machine implementation.
