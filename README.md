@@ -4,11 +4,11 @@ Reference architecture for designing modular industrial machine software using I
 
 ## Project Purpose
 
-This repository documents the architecture, engineering decisions, and development process behind a modular spray bar machine implemented using IEC 61131-3 Structured Text.
+This repository presents a reference architecture for a modular industrial spray bar machine implemented using IEC 61131-3 Structured Text.
 
-Its purpose is to capture the design process from requirements through software architecture to implementation, while serving as a reusable reference for developing maintainable industrial machine software.
+The goal is to demonstrate how functional requirements can be translated into a maintainable PLC software architecture based on clear responsibilities, explicit data ownership, deterministic execution, and reusable software components.
 
-Although based on a commercial project, the repository intentionally focuses on generalized architecture, engineering principles, and reusable software design rather than customer-specific implementation.
+Although the reference is based on a real industrial machine, the concepts are intentionally generalized so they can be applied to other machine-control applications.
 
 ## Design Philosophy
 
@@ -22,9 +22,11 @@ The project is built around a small set of engineering principles:
 
 These principles guide every architectural and implementation decision throughout the project.
 
+A more detailed description is available in [Design Principles](docs/design_principles.md).
+
 ## Architecture Overview
 
-The application is organized into five main building blocks:
+The application is organized into four main building blocks:
 
 ```text
 Application
@@ -32,37 +34,65 @@ Application
 ├── Interfaces
 ├── Managers
 ├── Modules
-├── Parameters
-└── Status
+└── Data
 ```
 
-The architecture clearly separates application logic from machine subsystems and external interfaces.
+Each building block has a clearly defined responsibility.
 
-Managers are responsible for application-level decisions and workflow.
+Interfaces isolate the application from external systems such as the HMI, hardware I/O, drives, and communication interfaces.
 
-Modules encapsulate subsystem behavior and own their internal state.
+Managers implement application-level decisions and coordinate machine behaviour.
 
-Interfaces isolate the application from the HMI, hardware, and external communication.
+Modules encapsulate subsystem functionality and own their internal state, diagnostics, and fault handling.
+
+Data defines the information exchanged between application components and is organized into commands, parameters, status, and diagnostics.
+
+```text
+Data
+│
+├── Commands
+├── Parameters
+├── Status
+└── Diagnostics
+```
+
+The architecture keeps application-level decisions separate from subsystem execution and maintains explicit ownership of application data.
 
 ## Repository Structure
 
 ```text
-docs/
-    machine_specification.md
-    software_architecture.md
-    engineering_principles.md
-    coding_standard.md
-    adr/
-
-examples/
-diagrams/
-images/
+.
+├── README.md
+│
+├── docs/
+│   ├── machine_specification.md
+│   ├── software_architecture.md
+│   ├── design_principles.md
+│   └── coding_standard.md
+│
+├── adr/
+│   ├── README.md
+│   ├── ADR-001-application-composition.md
+│   ├── ADR-002-application-data-ownership.md
+│   └── ADR-003-application-component-execution-model.md
+│
+├── diagrams/
+│   └── README.md
+│
+├── examples/
+│   └── README.md
+│
+└── images/
+    └── README.md
 ```
 
-* **docs** – Project documentation and architecture decision records.
-* **examples** – Simplified reference implementations and code snippets.
-* **diagrams** – Architecture and design diagrams.
-* **images** – Images used throughout the documentation.
+The repository is organized around documentation rather than production source code.
+
+* **docs/** – Functional specification, software architecture, design principles, and coding conventions.
+* **adr/** - Architecture Decision Records documenting significant design decisions and their rationale.
+* **diagrams/** – Architecture, state-machine, and sequence diagrams used to visualize the design.
+* **examples/** – Simplified IEC 61131-3 Structured Text examples illustrating selected architectural patterns.
+* **images/** – Supporting images used by the documentation.
 
 ## Intentionally Omitted
 
@@ -74,5 +104,7 @@ This repository does **not** include:
 * HMI project files
 * Drive configuration
 * Commissioning parameters
+* Network configuration, credentials, or access settings
+* Safety-rated control implementation
 
-The goal is to share engineering practices and software architecture without exposing proprietary implementation details.
+The repository focuses on software architecture, engineering principles, and generalized design decisions that can be reused across industrial machine projects.
