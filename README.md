@@ -89,7 +89,7 @@ The architecture keeps application-level decisions separate from subsystem execu
 The repository is organized around documentation rather than production source code.
 
 * **docs/** – Functional specification, software architecture, design principles, and coding conventions.
-* **adr/** - Architecture Decision Records documenting significant design decisions and their rationale.
+* **adr/** – Architecture Decision Records documenting significant design decisions and their rationale.
 * **diagrams/** – Architecture, state-machine, and sequence diagrams used to visualize the design.
 * **examples/** – Simplified IEC 61131-3 Structured Text examples illustrating selected architectural patterns.
 * **images/** – Supporting images used by the documentation.
