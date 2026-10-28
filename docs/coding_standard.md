@@ -26,35 +26,17 @@ The application shall have a single entry point.
 
 Where supported by the target PLC platform, the main program should be named `Application`.
 
-If the platform requires a predefined program name, such as `PLC_PRG`, the main program shall contain only the application entry point.
+The main program acts as the composition root of the application. It instantiates the main application components, owns shared application data, and defines their execution order.
 
-Preferred structure:
-
-```text
-PROGRAM Application
-        ↓
-FB_Application
-```
-
-Fallback structure:
-
-```text
-PROGRAM PLC_PRG
-        ↓
-FB_Application
-```
-
-The main program shall not contain application logic.
-
-Its only responsibility is to instantiate and execute `FB_Application`.
+Application logic should remain inside the corresponding managers and modules rather than being implemented directly in the main program.
 
 ---
 
 ## Component Interface Direction
 
-Application components shall use deterministic data exchange through explicit inputs and outputs.
+Application components shall exchange data through explicit inputs and outputs.
 
-Shared application data shall follow ownership rules:
+Shared application data follows clear ownership rules:
 
 | Data        | Owner            | Interface Direction       |
 | ----------- | ---------------- | ------------------------- |
@@ -63,75 +45,37 @@ Shared application data shall follow ownership rules:
 | Status      | Owning component | `VAR_OUTPUT` from owner   |
 | Diagnostics | Owning component | `VAR_OUTPUT` from owner   |
 
-Application components shall only modify data they own.
+Components shall modify only the data they own.
 
-Data owned by other components shall be treated as read-only.
+`VAR_IN_OUT` should be avoided for normal application data exchange.
 
-`VAR_IN_OUT` should be avoided for application components unless shared ownership is explicitly required and documented.
-
-Typical module interface:
-
-```text
-VAR_INPUT
-    stCommands
-    stParameters
-END_VAR
-
-VAR_OUTPUT
-    stStatus
-    stDiagnostics
-END_VAR
-```
-
-Typical manager interface:
-
-```text
-VAR_INPUT
-    stCommands
-    stParameters
-    stModuleStatus
-    stDiagnostics
-END_VAR
-
-VAR_OUTPUT
-    stStatus
-    stModuleCommands
-END_VAR
-```
+An exception is infrastructure references required by the target platform or motion-control library, such as a SoftMotion axis reference. In such cases, `VAR_IN_OUT` does not imply shared ownership of application state.
 
 ---
 
 ## Naming Convention
 
-The project uses a combination of type prefixes and role-based naming.
-
-Prefixes are used where they improve readability, online monitoring, and consistency.
-
----
-
-## Type Naming
+The project uses type prefixes and role-based naming where they improve readability, consistency, and online monitoring.
 
 ### Function Blocks
 
 Function block types use the `FB_` prefix.
 
 ```text
-FB_Application
 FB_AxisModule
 FB_PumpModule
+FB_ValveModule
 FB_SequenceManager
 ```
 
 Function block instances use the `fb` prefix.
 
 ```text
-fbApplication
 fbAxis
 fbPump
+fbValve
 fbSequenceManager
 ```
-
----
 
 ### Structures
 
@@ -141,7 +85,6 @@ Structure types use the `ST_` prefix.
 ST_Commands
 ST_Parameters
 ST_Status
-ST_Diagnostics
 ST_AxisCommands
 ST_AxisStatus
 ```
@@ -152,27 +95,20 @@ Structure instances use the `st` prefix.
 stCommands
 stParameters
 stStatus
-stDiagnostics
 stAxisCommands
 stAxisStatus
 ```
 
----
-
 ### Enumerations
 
-Enumeration types use the `E_` prefix.
+Enumeration types use the `E_` prefix and enumeration variables use the `e` prefix.
 
 ```text
 E_OperatingMode
 E_MachineState
 E_AxisCommand
 E_AxisState
-```
 
-Enumeration variables use the `e` prefix.
-
-```text
 eOperatingMode
 eMachineState
 eAxisCommand
@@ -189,35 +125,12 @@ STOPPED
 RUNNING
 FAULT
 ```
-### Enumeration Values
 
-Enumeration values should use explicit numeric assignments when they represent application states, commands, operating modes, alarms, faults, or other values that may be exchanged with external systems or persisted over time.
+Explicit numeric assignments should be used when enumeration values may be exchanged with external systems or persisted over time.
 
-Command, fault, and warning enumerations should reserve value `0` for `NONE` whenever applicable.
+Command, fault, and warning enumerations should reserve value `0` for `NONE` where applicable.
 
 State enumerations should use the first valid operational state as value `0` rather than introducing an artificial `NONE` state.
-
-Examples:
-
-```text
-E_AxisCommand
-    NONE            := 0
-    HOME            := 1
-    MOVE_ABSOLUTE   := 2
-    START_CYCLING   := 3
-    STOP            := 4
-```
-
-```text
-E_AxisState
-    NOT_HOMED       := 0
-    HOMING          := 1
-    IDLE            := 2
-    POSITIONING     := 3
-    CYCLING         := 4
-    STOPPING        := 5
-    FAULT           := 6
-```
 
 ---
 
@@ -240,13 +153,9 @@ Examples:
 ```text
 xEnable
 xReady
-xBusy
-xDone
 xFault
 
 rStartPosition
-rMachineWidth
-rCurrentPosition
 rTargetPosition
 
 iRetryCount
@@ -261,7 +170,7 @@ dtLastService
 
 ## Role-Based Naming
 
-Role-based names may be used when they better describe intent than a data type alone.
+Role-based names should describe the purpose of application data.
 
 Common role names include:
 
@@ -295,9 +204,7 @@ rTargetPosition
 
 ## Software Organization
 
-Application code should be organized around responsibilities.
-
-The main component categories are:
+Application code is organized around clear responsibilities:
 
 ```text
 Interfaces
@@ -306,30 +213,13 @@ Modules
 Data
 ```
 
-Each component shall have a clearly defined owner and responsibility.
+Each component should have one clearly defined responsibility.
 
----
+Function blocks should encapsulate one subsystem or application concern and exchange data through explicit command, parameter, status, and diagnostic structures where applicable.
 
-## Function Block Design
+Components shall not directly modify the internal state of other components.
 
-A function block should represent one clear responsibility.
-
-A function block shall not directly modify the internal state of another function block.
-
-Function blocks should exchange data through explicit input and output structures.
-
-Typical function block data groups:
-
-```text
-Commands
-Parameters
-Status
-Diagnostics
-```
-
-Not every function block needs every data group.
-
-Unused structures or signals shall not be added only for symmetry.
+Unused structures or signals should not be introduced only for symmetry.
 
 ---
 
@@ -337,52 +227,50 @@ Unused structures or signals shall not be added only for symmetry.
 
 Explicit states and commands should be represented using enumerations.
 
-Preferred:
-
 ```text
 eMachineState : E_MachineState;
 eAxisCommand  : E_AxisCommand;
 ```
 
-Avoid using plain integers or multiple unrelated booleans to represent complex states.
+Avoid using plain integers or multiple unrelated booleans to represent complex machine states.
 
-Commands represent requests.
+Commands represent requested actions.
 
-States represent current component condition.
+States represent the current condition of a component.
 
 ---
 
 ## Error Handling
 
-Faults shall have a clear owner.
+Faults shall have a clearly defined owner.
 
-A component that detects and owns a fault is responsible for reporting it.
+The component that detects a fault is responsible for reporting it.
 
 Faults should not reset automatically unless explicitly defined.
 
 Fault reset shall be intentional and traceable.
 
-Fault codes should be represented using an enumeration where practical.
+Fault codes should use enumerations where practical.
 
 ---
 
 ## Comments
 
-Comments should explain why something is done, not simply repeat what the code already says.
+Comments should explain intent or reasoning rather than repeat what the code already states.
 
-Avoid comments like:
-
-```text
-// Turn pump on
-```
-
-Prefer comments that explain intent:
+Prefer:
 
 ```text
-// Pump is enabled only during automatic production.
+// Keep the air valve open during the configured blow-off delay after stopping.
 ```
 
-Good naming and clear structure should reduce the need for explanatory comments.
+over:
+
+```text
+// Open air valve.
+```
+
+Clear naming and structure should reduce the need for excessive comments.
 
 ---
 
@@ -390,24 +278,20 @@ Good naming and clear structure should reduce the need for explanatory comments.
 
 Use consistent indentation and spacing throughout the project.
 
-Keep conditional logic readable.
-
-Avoid deeply nested logic where a small state machine or helper function would be clearer.
+Keep conditional logic readable and avoid unnecessary nesting.
 
 Use blank lines to separate logical sections of code.
 
+Prefer explicit and easy-to-debug logic over compact expressions.
+
 ---
 
-### PLCopen Motion Function Blocks
+## PLCopen Motion Function Blocks
 
-PLCopen motion function blocks shall be called directly inside the state that owns them.
+PLCopen motion function blocks should be called directly from the state or sub-state that owns the motion operation.
 
-Avoid unnecessary wrapper methods around PLCopen function blocks unless they provide significant code reuse.
+Prefer explicit `Execute := TRUE/FALSE` control so that command execution is easy to follow during online debugging and commissioning.
 
-Prefer explicit `Execute := TRUE/FALSE` logic, making the execution flow easy to understand during online debugging and commissioning.
+Avoid unnecessary wrapper layers unless they provide clear reuse or architectural value.
 
-For this project, readability and maintainability take precedence over excessive abstraction.
-
-Each PLCopen function block instance shall belong to a single state or sub-state.
-
-The ownership of a PLCopen function block must be obvious from the state machine implementation.
+Each PLCopen function block instance should have clear ownership within the motion state machine.
