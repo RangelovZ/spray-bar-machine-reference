@@ -20,7 +20,7 @@ A simple and repeatable execution model is required.
 
 ## Decision
 
-Each application component shall follow a three-phase execution model:
+Application components shall follow a three-phase execution model:
 
 ```text
 Read Inputs
@@ -30,25 +30,23 @@ Execute
 Update Outputs
 ```
 
-`Read Inputs` collects commands, parameters, status inputs, or other data required by the component.
+`Read Inputs` collects the data required by the component.
 
-`Execute` performs the component logic, including decisions, state machines, timers, and internal processing.
+`Execute` performs the component logic, including state machines, timers, and decisions.
 
-`Update Outputs` writes component status, diagnostics, or generated commands.
+`Update Outputs` publishes status, diagnostics, or generated commands.
 
-Internal implementation details remain private to each component.
+Internal implementation details remain private to the component.
 
 ---
 
 ## Rationale
 
-A common execution model makes components easier to understand and maintain.
+A common execution model makes application components easier to understand, debug, and maintain.
 
-The same structure can be applied to managers, modules, and future application components.
+The same structure can be applied to managers and modules while allowing each component to implement its own internal behaviour.
 
-The model is simple enough for small components while still supporting complex state machines.
-
-It also aligns with the application-level execution flow:
+The model also aligns with the application-level execution flow:
 
 ```text
 Read Interfaces
