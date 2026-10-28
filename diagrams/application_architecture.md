@@ -12,12 +12,15 @@ flowchart TB
         IF["Interfaces"]
         MGR["Sequence Manager"]
 
-        subgraph MOD["Modules"]
+        subgraph MOD[" "]
             direction LR
+            MODTITLE["Modules"]
+            VALVE["Valve Module"]
             AXIS["Axis Module"]
             PUMP["Pump Module"]
-            VALVE["Valve Module"]
         end
+
+        style MODTITLE fill:transparent,stroke:transparent
 
         DATA["Shared Application Data<br/>Commands · Parameters · Status · Diagnostics"]
 
