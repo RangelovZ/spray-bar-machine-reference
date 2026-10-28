@@ -77,14 +77,12 @@ The architecture keeps application-level decisions separate from subsystem execu
 │   ├── ADR-003-application-component-execution-model.md
 │   └── ADR-004-axis-homing-responsibility.md
 │
-├── diagrams/
-│   └── README.md
+└── diagrams/
+    ├── README.md
+    ├── application_architecture.md
+    ├── automatic_operation.md
+    └── homing_responsibility.md
 │
-├── examples/
-│   └── README.md
-│
-└── images/
-    └── README.md
 ```
 
 The repository is organized around documentation rather than production source code.
@@ -92,8 +90,6 @@ The repository is organized around documentation rather than production source c
 * **docs/** – Functional specification, software architecture, design principles, and coding conventions.
 * **adr/** – Architecture Decision Records documenting significant design decisions and their rationale.
 * **diagrams/** – Architecture, state-machine, and sequence diagrams used to visualize the design.
-* **examples/** – Simplified IEC 61131-3 Structured Text examples illustrating selected architectural patterns.
-* **images/** – Supporting images used by the documentation.
 
 ## Intentionally Omitted
 
