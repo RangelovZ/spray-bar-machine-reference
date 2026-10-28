@@ -74,7 +74,8 @@ The architecture keeps application-level decisions separate from subsystem execu
 │   ├── README.md
 │   ├── ADR-001-application-composition.md
 │   ├── ADR-002-application-data-ownership.md
-│   └── ADR-003-application-component-execution-model.md
+│   ├── ADR-003-application-component-execution-model.md
+│   └── ADR-004-axis-homing-responsibility.md
 │
 ├── diagrams/
 │   └── README.md
