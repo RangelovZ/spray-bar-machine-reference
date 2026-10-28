@@ -20,29 +20,29 @@ A consistent ownership model is required to keep components independent while al
 
 ## Decision
 
-`FB_Application` owns all application data.
+`Application` owns the shared application data and acts as the composition root.
 
-Application components exchange data exclusively through the application data owned by `FB_Application`.
+Application components exchange data through the structures owned by `Application`.
 
-Managers write commands.
+Managers generate commands.
 
-Modules read commands, execute their functionality, and update their status and diagnostics.
+Modules process commands and update their corresponding status and diagnostics.
 
-Components shall not reference or call each other directly.
+Components shall not directly modify the internal state of other components.
 
 ---
 
 ## Rationale
 
-Keeping application data in a single location establishes a clear ownership model and supports the Single Source of Truth principle.
+Keeping shared application data in one location establishes a clear ownership model and supports the Single Source of Truth principle.
 
-Managers remain responsible for making decisions.
+Managers remain responsible for application-level decisions.
 
-Modules remain responsible for executing subsystem functionality.
+Modules remain responsible for subsystem execution and status reporting.
 
-`FB_Application` becomes the composition root that connects components without introducing direct dependencies between them.
+`Application` connects the components and defines their execution order without introducing unnecessary direct dependencies.
 
-This architecture keeps application components independent and simplifies testing, maintenance, and future extension.
+This keeps application components loosely coupled and makes data flow easier to understand, debug, and maintain.
 
 ---
 
