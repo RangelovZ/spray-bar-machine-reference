@@ -68,9 +68,9 @@ State transitions should be intentional, predictable, and easy to understand.
 
 ### Architecture Before Implementation
 
-Software architecture shall be defined before implementation begins.
+The software architecture should be defined before detailed implementation begins.
 
-Implementation should be the result of architectural decisions rather than the process used to discover them.
+Implementation should follow the established architecture while allowing architectural decisions to be refined when new technical constraints or requirements are discovered.
 
 ---
 
@@ -78,17 +78,13 @@ Implementation should be the result of architectural decisions rather than the p
 
 The following guidelines support the core design principles:
 
-* Prefer simple solutions over complex solutions.
+* Prefer simple and explicit solutions.
 * Prefer readability over cleverness.
-* Prefer explicit behaviour over implicit behaviour.
-* Prefer reusable components over duplicated logic.
-* Prefer composition over tightly coupled designs.
 * Avoid unnecessary abstractions.
-* Document significant architectural decisions.
 * Keep interfaces small and well-defined.
 * Make component responsibilities obvious.
+* Document significant architectural decisions.
 * Design for maintainability before optimization.
-
 ---
 
 ## Applying These Principles
