@@ -31,11 +31,11 @@ Each building block has a clearly defined responsibility.
 
 Interfaces isolate the application from external systems.
 
-Managers implement application-level decisions and coordinate application execution.
+Managers implement application-level decisions and coordinate machine behaviour.
 
-Modules implement subsystem functionality and own their internal state.
+Modules implement subsystem-specific functionality and are responsible for their state, diagnostics, and fault handling.
 
-Data represents the information used and exchanged by application components.
+Data represents the information exchanged between application components.
 
 ---
 
@@ -47,7 +47,7 @@ Interfaces isolate hardware-specific implementation details.
 
 Managers coordinate application execution without implementing subsystem functionality.
 
-Modules encapsulate reusable subsystem logic and maintain ownership of their internal state.
+Modules encapsulate reusable subsystem logic and maintain responsibility for their subsystem state and behaviour.
 
 Data provides a consistent information model shared across the application while maintaining a single source of truth.
 
