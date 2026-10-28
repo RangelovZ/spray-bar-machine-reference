@@ -1,37 +1,53 @@
 # Application Architecture
 
-This diagram shows the logical structure of the application and the primary direction of data flow between its components.
+This diagram shows the application composition and the execution relationship between the main software components.
 
 ```mermaid
-flowchart TD
+flowchart TB
     EXT["External Systems / Hardware<br/>HMI · I/O · Drive · Communication"]
 
-    IF["Interfaces"]
-    MGR["Managers<br/>Sequence Manager"]
-    DATA["Application Data<br/>Commands · Parameters · Status · Diagnostics"]
+    subgraph APP["PROGRAM Application"]
+        direction TB
 
-    AXIS["Axis Module"]
-    PUMP["Pump Module"]
-    VALVE["Valve Module"]
+        IF["Interfaces"]
+        MGR["Sequence Manager"]
 
-    EXT --> IF
-    IF --> DATA
+        subgraph MOD["Modules"]
+            direction LR
+            AXIS["Axis Module"]
+            PUMP["Pump Module"]
+            VALVE["Valve Module"]
+        end
 
-    DATA --> MGR
-    MGR --> DATA
+        DATA["Shared Application Data<br/>Commands · Parameters · Status · Diagnostics"]
 
-    DATA --> AXIS
-    DATA --> PUMP
-    DATA --> VALVE
+        IF --> MGR
+        MGR --> AXIS
+        MGR --> PUMP
+        MGR --> VALVE
 
-    AXIS --> DATA
-    PUMP --> DATA
-    VALVE --> DATA
+        IF --- DATA
+        MGR --- DATA
+        AXIS --- DATA
+        PUMP --- DATA
+        VALVE --- DATA
+    end
 
-    DATA --> IF
-    IF --> EXT
+    EXT <--> IF
 ```
 
-The diagram represents logical responsibilities and data flow rather than direct component-to-component calls.
+`Application` acts as the composition root. It owns the shared application data, instantiates the main components, and defines their execution order.
 
-Managers make application-level decisions, modules execute subsystem behaviour, and interfaces isolate the application from external systems and hardware.
+The primary execution flow is:
+
+```text
+Read Interfaces
+        ↓
+Sequence Manager
+        ↓
+Axis / Pump / Valve Modules
+        ↓
+Write Interfaces
+```
+
+Commands, parameters, status, and diagnostics are shared application data used to exchange information between these components. They are not separate executable components.
