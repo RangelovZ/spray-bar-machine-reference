@@ -1,0 +1,63 @@
+# ADR-004: Axis Homing Responsibility
+
+## Purpose
+
+This ADR defines the responsibility split between the Axis Module and application-level sequence logic during homing.
+
+---
+
+## Context
+
+Homing establishes the mechanical reference position of the axis.
+
+The homing procedure is subsystem-specific, while the required machine position after homing depends on the active operating mode.
+
+Combining both responsibilities inside the Axis Module would couple reusable motion functionality with machine-specific workflow.
+
+---
+
+## Decision
+
+The Axis Module owns the complete homing procedure:
+
+```text
+Move Towards Mechanical Stop
+        ↓
+Detect Mechanical Stop
+        ↓
+Stop Axis Motion
+        ↓
+Set Axis Position to Zero
+        ↓
+Release Mechanical Stop
+        ↓
+Homing Completed
+```
+
+The Axis Module reports homing completion but does not determine the next machine position.
+
+The Sequence Manager decides what happens after homing:
+
+```text
+Automatic   → Move to Start Position
+Maintenance → Move to Maintenance Position
+Manual      → Remain available for manual operation
+```
+
+---
+
+## Rationale
+
+This separation keeps the Axis Module independent of machine operating modes and improves its reusability.
+
+The Axis Module remains responsible for motion execution, while the Sequence Manager remains responsible for machine-level workflow.
+
+---
+
+## Consequences
+
+The homing procedure can be reused independently of the machine sequence.
+
+Changes to post-homing behaviour do not require changes to the Axis Module.
+
+The Sequence Manager must explicitly handle the next action after homing has completed.
