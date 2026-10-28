@@ -39,7 +39,7 @@ flowchart TB
     EXT <--> IF
 ```
 
-`Application` acts as the composition root. It owns the shared application data, instantiates the main components, and defines their execution order.
+`Application` acts as the composition root. It hosts the shared application data instances, instantiates the main components, and defines their execution order. Each data item retains a single logical owner responsible for modifying it.
 
 The primary execution flow is:
 

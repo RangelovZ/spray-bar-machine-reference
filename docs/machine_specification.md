@@ -295,10 +295,10 @@ Once the Start Position has been reached:
 ```text
 Paper Present?
    Yes ───────→ Resume Automatic Production
-   No  ───────→ Remain in Paper Break Wait State
+   No  ───────→ Remain in Paper Break Wait Sequence State
 ```
 
-While the machine remains in the Paper Break Wait state, automatic cycling is inhibited until the paper-present condition is restored.
+While the machine remains in the Paper Break Wait sequence state, automatic cycling is inhibited until the paper-present condition is restored.
 
 When the condition becomes valid again, automatic production resumes from the Start Position.
 

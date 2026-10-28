@@ -82,14 +82,13 @@ The architecture keeps application-level decisions separate from subsystem execu
     ├── application_architecture.md
     ├── automatic_operation.md
     └── homing_responsibility.md
-│
 ```
 
 The repository is organized around documentation rather than production source code.
 
 * **docs/** – Functional specification, software architecture, design principles, and coding conventions.
 * **adr/** – Architecture Decision Records documenting significant design decisions and their rationale.
-* **diagrams/** – Architecture, state-machine, and sequence diagrams used to visualize the design.
+* **diagrams/** – Architecture and functional flow diagrams used to visualize the design.
 
 ## Intentionally Omitted
 

@@ -50,9 +50,7 @@ Describe the expected impact, including benefits, trade-offs, and limitations.
 ADR files shall use the following naming convention:
 
 ```text
-ADR-001-application-responsibilities.md
-ADR-002-command-status-communication.md
-ADR-003-one-way-data-flow.md
+ADR-XXX-decision-title.md
 ```
 
 Each ADR shall document a single architectural decision.

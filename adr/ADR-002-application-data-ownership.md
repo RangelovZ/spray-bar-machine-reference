@@ -20,13 +20,13 @@ A consistent ownership model is required to keep components independent while al
 
 ## Decision
 
-`Application` owns the shared application data and acts as the composition root.
+`Application` hosts the shared application data instances and acts as the composition root.
 
-Application components exchange data through the structures owned by `Application`.
+Application components exchange data through structures instantiated by `Application`.
 
-Managers generate commands.
+Each data item has one logical owner responsible for modifying it.
 
-Modules process commands and update their corresponding status and diagnostics.
+Managers generate commands, `Application` provides parameters, and modules update their corresponding status and diagnostics.
 
 Components shall not directly modify the internal state of other components.
 
@@ -34,7 +34,7 @@ Components shall not directly modify the internal state of other components.
 
 ## Rationale
 
-Keeping shared application data in one location establishes a clear ownership model and supports the Single Source of Truth principle.
+Keeping shared application data instances in one location while retaining explicit write ownership supports the Single Source of Truth principle.
 
 Managers remain responsible for application-level decisions.
 
@@ -52,6 +52,6 @@ Application components remain loosely coupled.
 
 Data exchange between components becomes explicit and easy to trace.
 
-Application data is centralized while execution logic remains distributed across managers and modules.
+Application data storage is centralized while write ownership and execution logic remain distributed across the responsible components.
 
 The architecture introduces additional data structures, but significantly improves readability, maintainability, and scalability.
